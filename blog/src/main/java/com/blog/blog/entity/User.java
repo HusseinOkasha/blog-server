@@ -8,7 +8,6 @@ import java.util.List;
 @Entity
 @Table(name = "user")
 public class User {
-
     // Define fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,121 +21,95 @@ public class User {
     private String email;
     @Column(name = "password")
     private String password;
-
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
-    @Column(name = "updatedAt")
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Post> posts;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<DraftPost> draftPosts;
-
-
-
     // Define constructors
-
     public User (){
 
     }
-
-    public User(String firstName, String lastName, String email, String password, LocalDateTime createdAt, LocalDateTime updatedAt, List<Post> posts, List<DraftPost> draftPosts) {
+    public User(String firstName, String lastName, String email, String password, LocalDateTime created_at,
+                LocalDateTime updated_at, List<Post> posts, List<DraftPost> draftPosts) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.createdAt = created_at;
+        this.updatedAt = updated_at;
         this.posts = posts;
         this.draftPosts = draftPosts;
     }
 
     // define setters / getters
-
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
-
     public String getFirstName() {
         return firstName;
     }
-
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-
     public String getLastName() {
         return lastName;
     }
-
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
-
     public String getPassword() {
         return password;
     }
-
     public void setPassword(String password) {
         this.password = password;
     }
-
-
     public List<Post> getPosts() {
         return posts;
     }
-
     public void setPosts(List<Post> posts) {
         this.posts = posts;
     }
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCreatedAt(LocalDateTime created_at) {
+        this.createdAt = created_at;
     }
-
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setUpdatedAt(LocalDateTime updated_at) {
+        this.updatedAt = updated_at;
     }
-
     public List<DraftPost> getDraftPosts() {
         return draftPosts;
     }
-
     public void setDraftPosts(List<DraftPost> draftPosts) {
         this.draftPosts = draftPosts;
+    }
+
+
+    @PrePersist
+    public void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+    @PreUpdate
+    public void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 
     // define toString method
