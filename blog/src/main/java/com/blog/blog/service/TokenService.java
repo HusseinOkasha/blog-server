@@ -6,12 +6,14 @@ import com.blog.blog.entity.Token;
 import java.util.List;
 
 public interface TokenService {
-     List<Token> findAll();
+    List<Token> findAll();
 
-     Token findById(int id);
+    Token findById(int id);
 
-     Token save(Token token);
-     List<Token> findByUserId(int userId);
-     void deleteById(int id);
+    Token save(Token token);
+
+    List<Token> findByUserId(int userId);
+
+    void deleteById(int id);
 
 }
