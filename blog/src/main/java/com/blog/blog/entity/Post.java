@@ -1,4 +1,5 @@
 package com.blog.blog.entity;
+
 import jakarta.persistence.*;
 
 
@@ -10,7 +11,7 @@ public class Post {
     // define fields
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id" )
+    @Column(name = "id")
     private int id;
     @Column(name = "body")
     private String body;
@@ -23,9 +24,10 @@ public class Post {
     private User user;
 
     // define constructors
-    public Post(){
+    public Post() {
 
     }
+
     public Post(String body, LocalDateTime createdAt, LocalDateTime updatedAt, User user) {
         this.body = body;
         this.createdAt = createdAt;
@@ -37,26 +39,41 @@ public class Post {
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
     }
+
     public String getBody() {
         return body;
     }
+
     public void setBody(String body) {
         this.body = body;
     }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
+
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @PrePersist
@@ -64,6 +81,7 @@ public class Post {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
+
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();

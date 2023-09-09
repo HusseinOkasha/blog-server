@@ -14,6 +14,7 @@ public interface DraftPostService {
     DraftPost save(DraftPost draftPost);
 
     List<DraftPost> findByUserId(int userId);
+
     void deleteById(int id);
 
 }

@@ -10,7 +10,7 @@ public class DraftPost {
     // define fields
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id" )
+    @Column(name = "id")
     private int id;
     @Column(name = "body")
     private String body;
@@ -23,9 +23,10 @@ public class DraftPost {
     private User user;
 
     // define constructors
-    public DraftPost(){
+    public DraftPost() {
 
     }
+
     public DraftPost(int userId, String body, LocalDateTime createdAt, LocalDateTime updatedAt, User user) {
         this.body = body;
         this.createdAt = createdAt;
@@ -37,24 +38,31 @@ public class DraftPost {
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
     }
+
     public String getBody() {
         return body;
     }
+
     public void setBody(String body) {
         this.body = body;
     }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
+
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
@@ -64,6 +72,7 @@ public class DraftPost {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
+
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();

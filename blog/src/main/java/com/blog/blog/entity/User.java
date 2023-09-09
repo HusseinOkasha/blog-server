@@ -1,5 +1,6 @@
 package com.blog.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ public class User {
     // Define fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
     @Column(name = "first_name")
     private String firstName;
@@ -25,14 +26,17 @@ public class User {
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> posts;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<DraftPost> draftPosts;
+
     // Define constructors
-    public User (){
+    public User() {
 
     }
+
     public User(String firstName, String lastName, String email, String password, LocalDateTime created_at,
                 LocalDateTime updated_at, List<Post> posts, List<DraftPost> draftPosts) {
         this.firstName = firstName;
@@ -49,54 +53,71 @@ public class User {
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
     }
+
     public String getFirstName() {
         return firstName;
     }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+
     public String getLastName() {
         return lastName;
     }
+
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
     public String getEmail() {
         return email;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
+
     public String getPassword() {
         return password;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
+
     public List<Post> getPosts() {
         return posts;
     }
+
     public void setPosts(List<Post> posts) {
         this.posts = posts;
     }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
     public void setCreatedAt(LocalDateTime created_at) {
         this.createdAt = created_at;
     }
+
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
+
     public void setUpdatedAt(LocalDateTime updated_at) {
         this.updatedAt = updated_at;
     }
+
     public List<DraftPost> getDraftPosts() {
         return draftPosts;
     }
+
     public void setDraftPosts(List<DraftPost> draftPosts) {
         this.draftPosts = draftPosts;
     }
@@ -107,6 +128,7 @@ public class User {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
+
     @PreUpdate
     public void onUpdate() {
         updatedAt = LocalDateTime.now();

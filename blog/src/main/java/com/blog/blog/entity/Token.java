@@ -25,7 +25,9 @@ public class Token {
     private User user;
 
     //  define constructors
-    public Token(){}
+    public Token() {
+    }
+
     public Token(boolean is_deleted, String body, LocalDateTime createdAt, LocalDateTime updatedAt, User user) {
         this.is_deleted = is_deleted;
         this.body = body;
@@ -38,36 +40,47 @@ public class Token {
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
     }
+
     public boolean getIs_deleted() {
         return is_deleted;
     }
+
     public void setIs_deleted(boolean is_deleted) {
         this.is_deleted = is_deleted;
     }
+
     public String getBody() {
         return body;
     }
+
     public void setBody(String body) {
         this.body = body;
     }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
+
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
     public User getUser() {
         return user;
     }
+
     public void setUser(User user) {
         this.user = user;
     }
@@ -77,6 +90,7 @@ public class Token {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
+
     @PreUpdate
     public void onUpdate() {
         updatedAt = LocalDateTime.now();
