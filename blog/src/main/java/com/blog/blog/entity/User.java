@@ -31,6 +31,9 @@ public class User {
     private List<Post> posts;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<DraftPost> draftPosts;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Token> tokens;
 
     // Define constructors
     public User() {
