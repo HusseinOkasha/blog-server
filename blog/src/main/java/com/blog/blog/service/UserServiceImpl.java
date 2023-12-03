@@ -3,6 +3,7 @@ package com.blog.blog.service;
 import com.blog.blog.dao.UserRepository;
 import com.blog.blog.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,8 +34,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByEmail(String email) {
+        Optional<User> result = userRepository.findUserByEmail(email);
+        User user = result.orElseThrow(()-> new RuntimeException("Couldn't find a user with email:" + email ));
+        return user;
+    }
+
+    @Override
     public User save(User user) {
-        return userRepository.save(user);
+        user.setId(0);
+        User dbUser = userRepository.save(user);
+        return dbUser;
     }
 
     @Override
