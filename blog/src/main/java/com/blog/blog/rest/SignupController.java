@@ -1,10 +1,10 @@
 package com.blog.blog.rest;
 
 import com.blog.blog.entity.User;
+import com.blog.blog.security.EncryptionService;
 import com.blog.blog.service.UserService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,13 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class SignupController {
     private UserService userService;
 
-    public SignupController(UserService userService){
+    private EncryptionService encryptionService;
+    public SignupController(UserService userService, EncryptionService encryptionService){
         this.userService = userService;
+        this.encryptionService = encryptionService;
     }
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody User user){
         try{
+            String password  = user.getPassword();
+            String bCryptPassword = encryptionService.encryptString(password);
+            user.setPassword(bCryptPassword);
             userService.save(user);
         }
         catch (DataIntegrityViolationException e){
