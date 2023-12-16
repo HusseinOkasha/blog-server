@@ -1,8 +1,10 @@
 package com.blog.blog.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenerationTime;
 
 
+import javax.annotation.processing.Generated;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,7 +21,9 @@ public class Post {
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
     @ManyToOne
+    @Generated( value = "ALWAYS" )
     @JoinColumn(name = "user_id")
     private User user;
 

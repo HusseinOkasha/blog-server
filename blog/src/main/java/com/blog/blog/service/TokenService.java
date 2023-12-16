@@ -1,5 +1,6 @@
 package com.blog.blog.service;
 
+import com.blog.blog.entity.User;
 import com.blog.blog.security.CustomUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.*;
@@ -8,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -15,9 +17,11 @@ public class TokenService {
 
     private final JwtEncoder encoder;
     private final JwtDecoder jwtDecoder;
-    public TokenService(JwtEncoder encoder, JwtDecoder jwtDecoder) {
+    private final UserService userService;
+    public TokenService(JwtEncoder encoder, JwtDecoder jwtDecoder, UserService userService) {
         this.encoder = encoder;
         this.jwtDecoder = jwtDecoder;
+        this.userService = userService;
     }
 
     public String generateToken(Authentication authentication) {
@@ -34,7 +38,12 @@ public class TokenService {
                 .build();
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
-
+    public Optional<User> getUser(String authorizationHeader){
+        Jwt decodedToken = getToken(authorizationHeader);
+        String userEmail = decodedToken.getClaim("sub");
+        User user = userService.findByEmail(userEmail);
+        return Optional.of(user);
+    }
 
     public Jwt getToken(String authorizationHeader){
         String encodedToken = extractToken(authorizationHeader);
@@ -51,5 +60,6 @@ public class TokenService {
         Jwt decodedToken = jwtDecoder.decode(encodedToken);
         return decodedToken ;
     }
+
 
 }

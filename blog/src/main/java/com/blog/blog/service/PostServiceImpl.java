@@ -21,27 +21,24 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> findAll() {
-        List<Post> posts = postRepository.findAll();
+        List<Post>posts = postRepository.findAll();
         return posts;
-
     }
 
     @Override
-    public Post findById(int id) {
-        Optional<Post> result = postRepository.findById(id);
-        Post post = result.orElseThrow(() -> new RuntimeException("Didn't found post id - " + id));
+    public Optional<Post> findById(int id) {
+        Optional<Post> post = postRepository.findById(id);
         return post;
     }
 
     @Override
-    public Post save(Post post) {
-        return postRepository.save(post);
+    public Optional<Post> save(Post post) {
+        return Optional.of(postRepository.save(post));
     }
 
     @Override
     public List<Post> findByUserId(int userId) {
-        Optional<List<Post>> result = postRepository.findByUser_id(userId);
-        List<Post> posts = result.orElseThrow(() -> new RuntimeException("Can't find any post for user id: " + userId));
+        List<Post> posts = postRepository.findByUser_id(userId);
         return posts;
     }
 

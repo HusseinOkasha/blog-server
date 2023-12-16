@@ -3,16 +3,17 @@ package com.blog.blog.service;
 import com.blog.blog.entity.Post;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PostService {
 
     List<Post> findAll();
 
-    Post findById(int id);
+    Optional<Post> findById(int id);
 
     List<Post> findByUserId(int userId);
 
-    Post save(Post post);
+    Optional<Post> save(Post post);
 
     void deleteById(int id);
 
