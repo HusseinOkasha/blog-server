@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping("/api")
 @RestController
@@ -24,7 +25,7 @@ public class UserRestController {
 
     @GetMapping("/users/{userId}")
     public User findById(@PathVariable int userId) {
-        return userService.findById(userId);
+        return userService.findById(userId).orElseGet(User::new);
     }
 
     @PostMapping("/users")
@@ -33,14 +34,14 @@ public class UserRestController {
         // this is to force a save of new item ... instead of update
 
         user.setId(0);
-        User dbUser = userService.save(user);
-        return dbUser;
+        Optional<User> dbUser = userService.save(user);
+        return dbUser.orElseGet(User::new);
     }
 
     @PutMapping("/users")
     public User updateUser(@RequestBody User user) {
-        User dbUser = userService.save(user);
-        return dbUser;
+        Optional<User> dbUser = userService.save(user);
+        return dbUser.orElseGet(User::new);
     }
 
     @DeleteMapping("/users/{userId}")

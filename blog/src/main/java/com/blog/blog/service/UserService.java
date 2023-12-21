@@ -3,15 +3,16 @@ package com.blog.blog.service;
 import com.blog.blog.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     List<User> findAll();
 
-    User findById(int id);
+    Optional<User> findById(int id);
 
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
-    User save(User user);
+    Optional<User> save(User user);
 
     void deleteById(int id);
 
