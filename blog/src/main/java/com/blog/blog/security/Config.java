@@ -4,6 +4,8 @@ import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -57,6 +59,18 @@ public class Config {
         return new NimbusJwtEncoder(jwks);
     }
 
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    @Bean
+    SecurityFilterChain loginFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/login")
+                .csrf((a)->a.disable())
+                .authenticationProvider(authenticationProviderService)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .httpBasic(withDefaults());
+        return http.build();
+    }
+
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -66,14 +80,9 @@ public class Config {
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer((oauth2)-> oauth2.jwt(withDefaults()))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .httpBasic(withDefaults());
-
+                .authenticationProvider(authenticationProviderService)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
-    }
-    @Autowired
-    public void configure(AuthenticationManagerBuilder auth){
-        auth.authenticationProvider(authenticationProviderService);
     }
 
 }
