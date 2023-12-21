@@ -41,8 +41,8 @@ public class TokenService {
     public Optional<User> getUser(String authorizationHeader){
         Jwt decodedToken = getToken(authorizationHeader);
         String userEmail = decodedToken.getClaim("sub");
-        User user = userService.findByEmail(userEmail);
-        return Optional.of(user);
+        Optional<User> user = userService.findByEmail(userEmail);
+        return user;
     }
 
     public Jwt getToken(String authorizationHeader){

@@ -27,29 +27,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(int id) {
-        Optional<User> result = userRepository.findById(id);
-        User user = result.orElseThrow(() -> new RuntimeException("Didn't found user id - " + id));
+    public Optional<User> findById(int id) {
+        Optional<User> user = userRepository.findById(id);
         return user;
     }
 
     @Override
-    public User findByEmail(String email) {
-        Optional<User> result = userRepository.findUserByEmail(email);
-        User user = result.orElseThrow(()-> new RuntimeException("Couldn't find a user with email:" + email ));
+    public Optional<User> findByEmail(String email) {
+        Optional<User> user = userRepository.findUserByEmail(email);
         return user;
     }
 
     @Override
-    public User save(User user) {
+    public Optional<User> save(User user) {
         user.setId(0);
-        User dbUser = userRepository.save(user);
-        return dbUser;
+        return Optional.of(userRepository.save(user));
     }
 
     @Override
     public void deleteById(int id) {
-        User user = findById(id);
-        userRepository.deleteById(user.getId());
+        userRepository.deleteById(id);
     }
 }
