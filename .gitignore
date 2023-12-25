@@ -41,3 +41,5 @@ blog/src/main/resources/certs/
 .DS_Store
 Thumbs.db
 .mvn
+
+blog/blog_schema.sql
