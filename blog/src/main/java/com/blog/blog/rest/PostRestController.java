@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @RequestMapping("api")
@@ -59,21 +60,38 @@ public class PostRestController {
     }
 
     @PostMapping("/posts")
-    public ResponseEntity<String> addPost(@RequestBody PostDto postDto, @RequestHeader String authorization) {
+    public ResponseEntity<PostDto> addPost(@RequestBody PostDto postDto, @RequestHeader String authorization) {
         Post post = postConverter.convertPostDtoToPostEntity(postDto);
+
+        // to let the database set the id
         post.setId(0);
+
+        // handling case of missing post body or empty post body
+        // 1) {}.
+        // 2) {"body": ""}.
+        // note: handling case of empty request body is done by spring.
+        if(post.getBody().isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new PostDto());
+        }
 
         // Get the user trying to add a post using the jwt token
         Optional<User> user = tokenService.getUser(authorization);
+
         return user
                 .map(value -> {
                     post.setUser(value);
-                    postService.save(post);
-                    return ResponseEntity.status(HttpStatus.CREATED).body("Post created successfully");
+                    Optional<Post> dbPost = postService.save(post);
+                    return ResponseEntity.status(HttpStatus.CREATED)
+                            .body(postConverter.convertPostEntityToPostDTO(
+                                    // in case of failing to save the post to the database
+                                    dbPost.orElseGet(Post::new)
+                            ));
                 })
-                .orElseGet(()-> ResponseEntity.status(401).body("Failed to create the post perhaps it's a credentials problem"));
+                // if the user embedded in the jwt token doesn't exist
+                .orElseGet(()-> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(new PostDto()));
     }
-
 
     @PutMapping("/posts")
     public ResponseEntity<String> updatePost(@RequestBody PostDto postDto , @RequestHeader String authorization) {

@@ -54,9 +54,13 @@ I have a user created under email: f1@gmail.com, password: 123 owning one post.
 * Replace "token" in the command with the token you got after a sucessfull login.
 * Along with authorization header containing a valid bearer token, and the post body it will return status code
   created 201.
-* In case of empty post body `{"body":""" }` it will work as the above scenario. (will be handled in future ISA)
-* In case of missing post body `{}`, returns internal server error 500. (will be handled in future ISA)
-* If the user embedded in the bearer token doesn't exist it will return status code 401 unauthorized
+* In case of empty post body `{"body": ""}` or missing post body `{}`, returns: 
+  * Status code 400 bad request
+  * Along with empty postDTO like `{
+    "id": 0,"body": "","createdAt": null,"updatedAt": null, "userEmail": null }`.
+* In case of missing request body, returns
+  * Status code 400 bad request
+* In case the user embedded in the bearer token doesn't exist it will return status code 401 unauthorized
 
 ### List your posts
 * `curl -H "Content-Type: application/json" \
@@ -66,7 +70,7 @@ I have a user created under email: f1@gmail.com, password: 123 owning one post.
 * Replace "token" in the command with the token you got after a sucessfull login.
 * Along with authorization header containing a valid bearer token, it will return all posts of the user 
 owning the token.
-* If the user embedded in the token doesn't exist it returns status code unauthorized 401.
+* In case the user embedded in the token doesn't exist it returns status code unauthorized 401.
 
 ### Edit post
 Currently, it requires that you know the database id of the post so, I will solve this issue first.
@@ -110,10 +114,10 @@ Currently, it requires that you know the database id of the post so, I will solv
   update doesn't exist.
   * In case of missing post body `{"id": 1 "}` it returns status code 500 internal server error (will be handled in
   future ISA).
-  * DELETE **api/posts**
-    * It expects an authorization header containing a valid bearer token and a request body containing the id of the
-    post to be deleted `{"id": 1}`.
-    * If the post id doesn't exist `{}` or belongs to a user other than the one specified in the bearer token, it returns
-    status code unauthorized 401
+* DELETE **api/posts**
+  * It expects an authorization header containing a valid bearer token and a request body containing the id of the
+  post to be deleted `{"id": 1}`.
+  * If the post id doesn't exist `{}` or belongs to a user other than the one specified in the bearer token, it returns
+  status code unauthorized 401
 ****
 
