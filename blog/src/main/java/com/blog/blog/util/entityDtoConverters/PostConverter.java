@@ -19,12 +19,17 @@ public final class PostConverter {
 
     public Post convertPostDtoToPostEntity(PostDto postDto){
         Post post = new Post(postDto.body(), postDto.createdAt(), postDto.updatedAt(), new User());
+        String body = postDto.body() == null ? "" : postDto.body();
+        post.setBody(body);
         post.setId(postDto.id());
         return post;
     }
+
 
     public PostDto convertPostEntityToPostDTO(Post post){
         PostDto postDto = new PostDto(post.getId(), post.getBody(), post.getCreatedAt(), post.getUpdatedAt() ,post.getUser().getEmail());
         return postDto;
     }
+
+
 }
