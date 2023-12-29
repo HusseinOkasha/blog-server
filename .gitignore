@@ -42,4 +42,3 @@ blog/src/main/resources/certs/
 Thumbs.db
 .mvn
 
-blog/blog_schema.sql
