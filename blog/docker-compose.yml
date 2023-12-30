@@ -14,7 +14,7 @@ services:
       - mysql_data:/var/lib/mysql
 
   spring-boot-app:
-    image: husseinokasha/blog
+    image: blog
     ports:
       - "8080:8080"
     networks:
