@@ -6,21 +6,25 @@ list or delete your own posts.
 
 # How to run
 The project is dockerized and is divided into two services the first is the mysql which will be built from
-"**Dockerfile-mysql**" and the second is the spring app which I have created an image of and published it on dockerhub.
+"**Dockerfile-mysql**" and the second is the spring app which will be built from "**Dockerfile**"
 
 ## Steps
-1) clone the repo `git clone https://github.com/HusseinOkasha/blog-server.git`
-2) navigate to ``blog-server/blog``
-3) open the terminal or cmd on this path
-4) run the following command `docker compose up`
-
-`docker compose up` will pull image **husseinokasha/blog** from dockerhub and run it in a docker container also it will
-pull **mysql:latest** if it doesn't exist on your computer and run it in a separate container.
+* clone the repo `git clone https://github.com/HusseinOkasha/blog-server.git`
+* navigate to ``blog-server/blog``
+* open the terminal or cmd on this path
+* run `./mvnw clean package` 
+   * **clean**  will clean the directory from existing build files.
+   * **package** will package the application generating a jar file containing compiled code and it's dependencies
+* run `docker build -t blog .`
+  * will build a docker based on Dockerfile in the current directory and give that image a tag 'blog'
+* run  `docker compose up`will start
+  * mysql based on Dockerfile-mysql
+  * the spring app based on the image we have created above. 
 
 In order to run successfully make sure you have no process using ports 8080 or 3306.
 
 # User Guide
-I have a user created under email: f1@gmail.com, password: 123 owning one post.
+I have a user created under email: "f1@gmail.com", password: "123" owning one post.
 
 ### Signup
 
