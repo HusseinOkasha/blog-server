@@ -9,15 +9,15 @@ The project is dockerized and is divided into two services the first is the mysq
 "**Dockerfile-mysql**" and the second is the spring app which will be built from "**Dockerfile**"
 
 ## Steps
-* clone the repo `git clone https://github.com/HusseinOkasha/blog-server.git`
-* navigate to ``blog-server/blog``
-* open the terminal or cmd on this path
-* run `./mvnw clean package` 
+* Clone the repo `git clone https://github.com/HusseinOkasha/blog-server.git`
+* Navigate to ``blog-server/blog``
+* Open the terminal or cmd on this path
+* Run `./mvnw clean package` 
    * **clean**  will clean the directory from existing build files.
    * **package** will package the application generating a jar file containing compiled code and it's dependencies
-* run `docker build -t blog .`
-  * will build a docker based on Dockerfile in the current directory and give that image a tag 'blog'
-* run  `docker compose up`will start
+* Run `docker build -t blog .`
+  * will build a docker image based on Dockerfile in the current directory and give that image a tag 'blog'
+* Run  `docker compose up` will start:
   * mysql based on Dockerfile-mysql
   * the spring app based on the image we have created above. 
 
@@ -38,9 +38,8 @@ I have a user created under email: "f1@gmail.com", password: "123" owning one po
 `
 * It accepts a post request with user information (firstName, lastName, email, password)
 * In case of successful signup it returns status code 200.
-* In case of  missing field returns status code 400 bad request .
-* It allows duplicate email addresses due to a forgotten unique constraint in the sql schema (will be handled in
-  future ISA )
+* In case of missing field returns status code 400 bad request.
+* In case of using already existing email address will return 400 bad request.
 
 ### Login
 * `curl -X POST -H "Content-Type: application/json"  -u f2@gmail.com:123 http://localhost:8080/login`
