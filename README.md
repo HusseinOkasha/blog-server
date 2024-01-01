@@ -6,20 +6,16 @@ list or delete your own posts.
 
 # How to run
 The project is dockerized and is divided into two services the first is the mysql which will be built from
-"**Dockerfile-mysql**" and the second is the spring app which will be built from "**Dockerfile**"
+"**Dockerfile-mysql**" and the second is the spring app which I have created an image of it and pushed to dockerhub.
 
 ## Steps
 * Clone the repo `git clone https://github.com/HusseinOkasha/blog-server.git`
 * Navigate to ``blog-server/blog``
 * Open the terminal or cmd on this path
-* Run `./mvnw clean package` 
-   * **clean**  will clean the directory from existing build files.
-   * **package** will package the application generating a jar file containing compiled code and it's dependencies
-* Run `docker build -t blog .`
-  * will build a docker image based on Dockerfile in the current directory and give that image a tag 'blog'
-* Run  `docker compose up` will start:
-  * mysql based on Dockerfile-mysql
-  * the spring app based on the image we have created above. 
+* Run `docker compose up` will:
+  * start mysql based on Dockerfile-mysql
+  * pull image husseinokasha/blog from dockerhub if it doesn't exist on your computer.
+  * It will take 6 to 10 minutes to start + the download time. 
 
 In order to run successfully make sure you have no process using ports 8080 or 3306.
 
