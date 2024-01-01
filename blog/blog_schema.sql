@@ -68,7 +68,7 @@ CREATE TABLE `post` (
 
 LOCK TABLES `post` WRITE;
 /*!40000 ALTER TABLE `post` DISABLE KEYS */;
-INSERT INTO `post` VALUES (1,'hello this is f1 post 1 ','2023-12-23 13:31:00','2023-12-23 13:31:00',1),(2,'','2023-12-26 12:47:45','2023-12-26 12:47:45',1),(3,'f2 first post','2023-12-27 11:52:35','2023-12-27 11:52:35',5);
+INSERT INTO `post` VALUES (1,'hello this is f1 post 1 ','2023-12-23 13:31:00','2023-12-23 13:31:00',1);
 /*!40000 ALTER TABLE `post` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -7,14 +7,18 @@ services:
     ports:
       - "3306:3306"
     healthcheck:
-      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -u root -p$root" ]
+      test: [ "CMD-SHELL", "mysql -h localhost -u root -proot -e 'select * from blog.user;'" ]
+      interval: 30s
+      timeout: 10s
+      retries: 20
     networks:
       - blog-network
     volumes:
       - mysql_data:/var/lib/mysql
 
+
   spring-boot-app:
-    image: blog
+    image: husseinokasha/blog
     ports:
       - "8080:8080"
     networks:
@@ -26,6 +30,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/blog
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+
 
 networks:
   blog-network:
