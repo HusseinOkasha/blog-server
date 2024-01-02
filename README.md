@@ -44,11 +44,11 @@ I have a user created under email: "f1@gmail.com", password: "123" owning one po
 * In case of failed login, returns status code 401 unauthorized.
 
 ### Create Post
-* `curl -X POST \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer token" \
-  -d '{"body": "f2 first post"}' \
-  http://localhost:8080/api/posts
+* `curl -X POST
+-H "Content-Type: application/json"
+-H "Authorization: Bearer token"
+-d '{"body": "f2 first post"}'
+http://localhost:8080/api/posts
   `
 * Replace "token" in the command with the token you got after a sucessfull login.
 * Along with authorization header containing a valid bearer token, and the post body it will return status code
@@ -62,9 +62,9 @@ I have a user created under email: "f1@gmail.com", password: "123" owning one po
 * In case the user embedded in the bearer token doesn't exist it will return status code 401 unauthorized
 
 ### List your posts
-* `curl -H "Content-Type: application/json" \
-  -H "Authorization: Bearer token" \
-  http://localhost:8080/api/posts
+* `curl -H "Content-Type: application/json"
+-H "Authorization: Bearer token"
+http://localhost:8080/api/posts
   `
 * Replace "token" in the command with the token you got after a sucessfull login.
 * Along with authorization header containing a valid bearer token, it will return all posts of the user 
