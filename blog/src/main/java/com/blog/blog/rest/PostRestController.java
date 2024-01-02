@@ -61,19 +61,18 @@ public class PostRestController {
 
     @PostMapping("/posts")
     public ResponseEntity<PostDto> addPost(@RequestBody PostDto postDto, @RequestHeader String authorization) {
-        Post post = postConverter.convertPostDtoToPostEntity(postDto);
-
-        // to let the database set the id
-        post.setId(0);
-
         // handling case of missing post body or empty post body
         // 1) {}.
         // 2) {"body": ""}.
         // note: handling case of empty request body is done by spring.
-        if(post.getBody().isEmpty()){
+        if(hasEmptyBody(postDto)){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new PostDto());
         }
+
+        Post post = postConverter.convertPostDtoToPostEntity(postDto);
+        // to let the database set the id
+        post.setId(0);
 
         // Get the user trying to add a post using the jwt token
         Optional<User> user = tokenService.getUser(authorization);
