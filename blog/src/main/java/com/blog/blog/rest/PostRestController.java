@@ -94,30 +94,37 @@ public class PostRestController {
     }
 
     @PutMapping("/posts")
-    public ResponseEntity<String> updatePost(@RequestBody PostDto postDto , @RequestHeader String authorization) {
-        // Get the user trying to update the post using the jwt token
-        Optional<User> reqUser = tokenService.getUser(authorization);
+    public ResponseEntity<PostDto> updatePost(@RequestBody PostDto postDto , @RequestHeader String authorization) {
 
-        // Check if there is a post with provided id in the request body
+        // check that the post body isn't empty or missing
+        if(hasEmptyBody(postDto)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new PostDto());
+        }
+
+        // Check the existence of a post with provided id in the request body
         Optional<Post> result = postService.findById(postDto.id());
-        if(result.isEmpty()){ return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("The post you are trying to" +
-                " update doesn't exist");}
+        if(result.isEmpty()){ return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(new PostDto());}
 
         Post dbPost = result.get();
+
+        // Get the user trying to update the post using the jwt token
+        Optional<User> reqUser = tokenService.getUser(authorization);
 
         // Get the user who originally created that post we are trying to update
         User dbPostUser = dbPost.getUser();
 
         // Check the case if a user is trying to update a post which belongs to another user
         if(reqUser.isEmpty() || dbPostUser != reqUser.get()){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new PostDto());
         }
 
         // Actually update the post
         dbPost.setBody(postDto.body());
         Optional<Post> dbPostAfterUpdate = postService.save(dbPost);
 
-        return ResponseEntity.ok("Post updated successfully");
+        return dbPostAfterUpdate
+                .map(post -> ResponseEntity.ok().body(postConverter.convertPostEntityToPostDTO(post)))
+                .orElseGet(() -> ResponseEntity.ok().body(new PostDto()));
     }
 
 
@@ -143,6 +150,13 @@ public class PostRestController {
         return ResponseEntity.status(HttpStatus.OK).body("Post deleted successfully");
     }
 
+
+    private boolean hasEmptyBody(PostDto postDto){
+        Post postEntity = postConverter.convertPostDtoToPostEntity(postDto);
+        // check that the post body isn't empty or missing
+        return postEntity.getBody().isEmpty();
+
+    }
 
 
 }
