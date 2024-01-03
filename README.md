@@ -24,35 +24,27 @@ I have a user created under email: "f1@gmail.com", password: "123" owning one po
 
 ### Signup
 * #### Command
-
-  * `curl -X POST -H "Content-Type: application/json"  -d '
-  {"firstName":"f2", "lastName":"l2", "email":"f2@gmail.com", "password":123 }' http://localhost:8080/api/signup
-  `
+  * `curl -X POST -H "Content-Type: application/json"  -d '{"firstName":"f2", "lastName":"l2", "email":"f2@gmail.com", "password":123 }' http://localhost:8080/api/signup`
 * #### Explanation
   * It accepts a post request with user information (firstName, lastName, email, password)
-  * In case of successful signup it returns status code 200.
-  * In case of missing field returns status code 400 bad request.
-  * In case of using already existing email address will return 400 bad request.
+  * In case of successful signup it returns status code 200 OK.
+  * In case of missing field returns status code 400 BAD_REQUEST.
+  * In case of using already existing email address will return 400 BAD_REQUEST.
 
 ### Login
 * #### Command
-  * `curl -X POST -H "Content-Type: application/json"  -u f2@gmail.com:123 http://localhost:8080/login`
+  * `curl -X POST -H "Content-Type: application/json" -u f2@gmail.com:123 http://localhost:8080/login`
 * #### Explanation
   * It accepts http post requests with user credentials (basic auth)
-  * In case of successfull login, it returns a jwt token which you should use with your future requests.
-  * In case of failed login, returns status code 401 unauthorized.
+  * In case of successful login, it returns a jwt token which you should use with your future requests.
+  * In case of failed login, returns status code 401 UNAUTHORIZED.
 
 ### Create Post
 * #### Command
-  * `curl -X POST
-  -H "Content-Type: application/json"
-  -H "Authorization: Bearer token"
-  -d '{"body": "f2 first post"}'
-  http://localhost:8080/api/posts
-    `
+  * `curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer token" -d '{"body": "f2 first post"}' http://localhost:8080/api/posts`
 * #### Explanation
-  * Replace "token" in the command with the token you got after a sucessfull login.
-  * With authorization header containing a valid bearer token, and the post body, it returns status code created 201 and
+  * Replace "token" in the command with the token you got after a successful login.
+  * With authorization header containing a valid bearer token, and the post body, it returns status code CREATED 201 and
   postDto like `{
     "id": 1,
     "body": "f2 first post",
@@ -65,62 +57,63 @@ I have a user created under email: "f1@gmail.com", password: "123" owning one po
     * Along with empty postDTO like `{
       "id": 0,"body": "","createdAt": null,"updatedAt": null, "userEmail": null }`.
   * In case of missing request body, returns
-    * Status code 400 bad request
-  * In case the user embedded in the bearer token doesn't exist it will return status code 401 unauthorized
+    * Status code 400 BAD_REQUEST
+  * In case the user embedded in the bearer token doesn't exist it will return status code 401 UNAUTHORIZED
 
 ### List your posts
 * #### Command
   * `curl -H "Content-Type: application/json" -H "Authorization: Bearer token" http://localhost:8080/api/posts`
 * #### Explanation
-  * Replace "token" in the command with the token you got after a sucessfull login.
+  * Replace "token" in the command with the token you got after a successful login.
   * It returns all posts of the user owning the token.
-  * In case the user embedded in the token doesn't exist it returns status code unauthorized 401.
+  * In case the user embedded in the token doesn't exist it returns status code UNAUTHORIZED 401.
 
 ### Edit post
-Currently, it requires that you know the database id of the post so, I will solve this issue first.
+* #### Command
+  * `curl -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer token" -d '{"id": "1", "body": "f2 first post update!"}' http://localhost:8080/api/posts`
+* #### Explanation
+  * When you create a post you will get a postDto containing the post database id, which you should use to identify the 
+post you want to edit.
+  * Replace "token" in the command with the token you got after a successful login.
+  * With authorization header containing a valid bearer token, and the post body, it returns status code CREATED 201 and
+    postDto like `{
+    "id": 1,
+    "body": "f2 first post",
+    "createdAt": "2024-01-02T13:23:04.009175413",
+    "updatedAt": "2024-01-02T13:23:04.009210933",
+    "userEmail": "f2@gmail.com"
+    }`
+  * In case of empty post body `{"body": ""}` or missing post body `{}`, returns:
+    * Status code 400 BAD_REQUEST
+    * Along with empty postDTO like `{
+      "id": 0,"body": "","createdAt": null,"updatedAt": null, "userEmail": null }`.
+  * In case of missing request body, returns
+    * Status code 400 BAD_REQUEST
+  * In case the user embedded in the bearer token doesn't exist it will return status code 401 UNAUTHORIZED.
+  * In case the user embedded in the bearer token doesn't own the post identified by the provided id it returns.
+    * Status code 401 UNAUTHORIZED.
+  * In case of missing id, returns
+    * Status code 400 BAD_REQUEST
+    * Message saying that the post you are trying to update doesn't exist
+
 ### Delete post
-Currently, it requires that you know the database id of the post so, I will solve this issue first.
+* #### Command
+  * `curl -X DELETE -H "Content-Type: application/json" -H "Authorization: Bearer token" -d '{"id": "1", "body": "f2 first post update!"}' http://localhost:8080/api/posts`
+* #### Explanation
+  * When you create a post you will get a postDto containing the post database id, which you should use to identify the
+    post you want to delete.
+  * Replace "token" in the command with the token you got after a successful login.
+  * In case of missing post id in the request body, it returns
+    * status code 400 BAD_REQUEST.
+    * Message saying post you are trying to delete doesn't exist.
+  * In case of absence of a post with the provided id, it returns
+    * status code 404 NOT_FOUND.
+    * Message saying post you are trying to update doesn't exist.
+  * In case the user embedded in the bearer token doesn't exist it will return status code 401 UNAUTHORIZED.
+  * In case the user embedded in the bearer token doesn't own the post identified by the provided id it returns.
+    * Status code 401 UNAUTHORIZED.
+  * In case of successful deletion, it returns 
+    * Status code 200 OK
+    * Message saying post deleted successfully.
 
 ****
-## Endpoints
-* **/login**
-  * It accepts http post requests with user credential (basic auth)
-  * In case of successfull login, it returns a jwt token which you should use with your future requests, otherwise returns 
-   status code 401 unauthorized.
-  
-* **/api/signup**
-  * It accepts a post request with user information (firstName, lastName, email, password)
-  * In case of successful signup it returns status code 200.
-  * In case of  missing field returns status code 400 bad request .
-  * It allows duplicate email addresses due to a forgotten unique constraint in the sql schema (will be handled in
-  future ISA )
-
-
-### /api/posts
-
-* GET **/api/posts**
-  * Along with authorization header containing a valid bearer token, it will return all posts of the user
-   owning the token.
-  * If the user embedded in the token doesn't exist it returns status code unauthorized 401.
-* POST **api/posts**
-  * Along with authorization header containing a valid bearer token, and the post body it will return status code 
-  created 201.
-  * In case of empty post body `{"body":""" }` it will work as the above scenario. (will be handled in future ISA)
-  * In case of missing post body `{}`, returns internal server error 500. (will be handled in future ISA)
-  * If the user embedded in the bearer token doesn't exist it will return status code 401 unauthorized  
-* PUT **api/post**
-  * Along with authorization header containing a valid bearer token, and a request body contains the post id and the
-  updated post body, it returns status code 200 ok 
-  * If the user embedded in the bearer token doesn't exist it will return status code 401 unauthorized
-  * In case of empty post body `{"id":1 ,"body": """}` it returns status code 200 ok (will be handled in future ISA).
-  * In case of missing post id `{"body": """}` it returns status code 400 bad request saying the post you are trying to 
-  update doesn't exist.
-  * In case of missing post body `{"id": 1 "}` it returns status code 500 internal server error (will be handled in
-  future ISA).
-* DELETE **api/posts**
-  * It expects an authorization header containing a valid bearer token and a request body containing the id of the
-  post to be deleted `{"id": 1}`.
-  * If the post id doesn't exist `{}` or belongs to a user other than the one specified in the bearer token, it returns
-  status code unauthorized 401
-****
-
