@@ -23,57 +23,61 @@ In order to run successfully make sure you have no process using ports 8080 or 3
 I have a user created under email: "f1@gmail.com", password: "123" owning one post.
 
 ### Signup
+* #### Command
 
-* `curl -X POST -H "Content-Type: application/json"  -d '
-{
-"firstName":"f2",
-"lastName":"l2",
-"email":"f2@gmail.com",
-"password":123
-}' http://localhost:8080/api/signup
-`
-* It accepts a post request with user information (firstName, lastName, email, password)
-* In case of successful signup it returns status code 200.
-* In case of missing field returns status code 400 bad request.
-* In case of using already existing email address will return 400 bad request.
+  * `curl -X POST -H "Content-Type: application/json"  -d '
+  {"firstName":"f2", "lastName":"l2", "email":"f2@gmail.com", "password":123 }' http://localhost:8080/api/signup
+  `
+* #### Explanation
+  * It accepts a post request with user information (firstName, lastName, email, password)
+  * In case of successful signup it returns status code 200.
+  * In case of missing field returns status code 400 bad request.
+  * In case of using already existing email address will return 400 bad request.
 
 ### Login
-* `curl -X POST -H "Content-Type: application/json"  -u f2@gmail.com:123 http://localhost:8080/login`
-* It accepts http post requests with user credentials (basic auth)
-* In case of successfull login, it returns a jwt token which you should use with your future requests.
-* In case of failed login, returns status code 401 unauthorized.
+* #### Command
+  * `curl -X POST -H "Content-Type: application/json"  -u f2@gmail.com:123 http://localhost:8080/login`
+* #### Explanation
+  * It accepts http post requests with user credentials (basic auth)
+  * In case of successfull login, it returns a jwt token which you should use with your future requests.
+  * In case of failed login, returns status code 401 unauthorized.
 
 ### Create Post
-* `curl -X POST
--H "Content-Type: application/json"
--H "Authorization: Bearer token"
--d '{"body": "f2 first post"}'
-http://localhost:8080/api/posts
-  `
-* Replace "token" in the command with the token you got after a sucessfull login.
-* Along with authorization header containing a valid bearer token, and the post body it will return status code
-  created 201.
-* In case of empty post body `{"body": ""}` or missing post body `{}`, returns: 
-  * Status code 400 bad request
-  * Along with empty postDTO like `{
-    "id": 0,"body": "","createdAt": null,"updatedAt": null, "userEmail": null }`.
-* In case of missing request body, returns
-  * Status code 400 bad request
-* In case the user embedded in the bearer token doesn't exist it will return status code 401 unauthorized
+* #### Command
+  * `curl -X POST
+  -H "Content-Type: application/json"
+  -H "Authorization: Bearer token"
+  -d '{"body": "f2 first post"}'
+  http://localhost:8080/api/posts
+    `
+* #### Explanation
+  * Replace "token" in the command with the token you got after a sucessfull login.
+  * With authorization header containing a valid bearer token, and the post body, it returns status code created 201 and
+  postDto like `{
+    "id": 1,
+    "body": "f2 first post",
+    "createdAt": "2024-01-02T13:23:04.009175413",
+    "updatedAt": "2024-01-02T13:23:04.009210933",
+    "userEmail": "f2@gmail.com"
+    }`
+  * In case of empty post body `{"body": ""}` or missing post body `{}`, returns:
+    * Status code 400 bad request
+    * Along with empty postDTO like `{
+      "id": 0,"body": "","createdAt": null,"updatedAt": null, "userEmail": null }`.
+  * In case of missing request body, returns
+    * Status code 400 bad request
+  * In case the user embedded in the bearer token doesn't exist it will return status code 401 unauthorized
 
 ### List your posts
-* `curl -H "Content-Type: application/json"
--H "Authorization: Bearer token"
-http://localhost:8080/api/posts
-  `
-* Replace "token" in the command with the token you got after a sucessfull login.
-* Along with authorization header containing a valid bearer token, it will return all posts of the user 
-owning the token.
-* In case the user embedded in the token doesn't exist it returns status code unauthorized 401.
+* #### Command
+  * `curl -H "Content-Type: application/json" -H "Authorization: Bearer token" http://localhost:8080/api/posts`
+* #### Explanation
+  * Replace "token" in the command with the token you got after a sucessfull login.
+  * It returns all posts of the user owning the token.
+  * In case the user embedded in the token doesn't exist it returns status code unauthorized 401.
 
 ### Edit post
 Currently, it requires that you know the database id of the post so, I will solve this issue first.
-
 ### Delete post
 Currently, it requires that you know the database id of the post so, I will solve this issue first.
 
