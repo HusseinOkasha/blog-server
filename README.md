@@ -6,7 +6,7 @@ list or delete your own posts.
 
 # How to run
 The project is dockerized and is divided into two services the first is the mysql which will be built from
-"**Dockerfile-mysql**" and the second is the spring app which I have created an image of it and pushed to dockerhub.
+"**Dockerfile-mysql**" and the second is the spring app which will be built from "**Dockerfile**".
 
 ## Steps
 * Clone the repo `git clone https://github.com/HusseinOkasha/blog-server.git`
@@ -14,8 +14,12 @@ The project is dockerized and is divided into two services the first is the mysq
 * Open the terminal or cmd on this path
 * Run `docker compose up` will:
   * start mysql based on Dockerfile-mysql
-  * pull image husseinokasha/blog from dockerhub if it doesn't exist on your computer.
-  * It will take 6 to 10 minutes to start + the download time. 
+  * create an image based on ubuntu as builder and inside that image it will
+    * install git and maven.
+    * pull the gitHub repo (blog-server).
+    * build the project using maven generating a jar file.
+    * execute that jar file.
+  * It will take 6 to 10 minutes to start.
 
 In order to run successfully make sure you have no process using ports 8080 or 3306.
 
